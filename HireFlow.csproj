@@ -21,7 +21,6 @@
       <Folder Include="Applications\DTOs\" />
       <Folder Include="Applications\Services\" />
       <Folder Include="Controllers\" />
-      <Folder Include="Domain\Entities\" />
       <Folder Include="Infrastructure\Data\" />
     </ItemGroup>
 
