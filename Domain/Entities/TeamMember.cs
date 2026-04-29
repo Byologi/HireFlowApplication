@@ -4,9 +4,9 @@ namespace HireFlow.Domain.Entities
 {
     public class TeamMember
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Email { get; set; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
         public TeamMemberRole Role { get; set; }
     }
 }
