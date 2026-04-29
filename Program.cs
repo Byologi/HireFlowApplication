@@ -1,5 +1,6 @@
 using HireFlow.Infrastructure.Data;
 using HireFlow.Services;
+using HireFlow.Services.Applications;
 using HireFlow.Services.Jobs;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<HireFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IJobService, JobService>();
+
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 var app = builder.Build();
 
