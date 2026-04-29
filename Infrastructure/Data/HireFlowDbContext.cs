@@ -13,8 +13,8 @@ namespace HireFlow.Infrastructure.Data
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Application> Applications { get; set; }
-        public DbSet<ApplicationNote> ApplicationNotes { get; set; }
-        public DbSet<StageHistory> StageHistories { get; set; }
+        public ICollection<ApplicationNote> Notes { get; set; } = new List<ApplicationNote>();
+        public ICollection<StageHistory> StageHistories { get; set; } = new List<StageHistory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,12 +32,12 @@ namespace HireFlow.Infrastructure.Data
                 .HasForeignKey(a => a.JobId);
 
             modelBuilder.Entity<Application>()
-                .HasMany<ApplicationNote>()
+                .HasMany(a => a.Notes)
                 .WithOne(n => n.Application)
                 .HasForeignKey(n => n.ApplicationId);
 
             modelBuilder.Entity<Application>()
-                .HasMany<StageHistory>()
+                .HasMany(a => a.StageHistories)
                 .WithOne(s => s.Application)
                 .HasForeignKey(s => s.ApplicationId);
         }

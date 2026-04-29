@@ -1,7 +1,7 @@
-using HireFlow.Infrastructure.Data;
-using HireFlow.Domain.Entities;
+using HireFlow.DTOs;
+using HireFlow.Services;
+using HireFlow.Services.Jobs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HireFlow.Controllers
 {
@@ -9,48 +9,36 @@ namespace HireFlow.Controllers
     [Route("api/jobs")]
     public class JobsController : ControllerBase
     {
-        private readonly HireFlowDbContext _context;
+        private readonly IJobService _jobService;
 
-        public JobsController(HireFlowDbContext context)
+        public JobsController(IJobService jobService)
         {
-            _context = context;
+            _jobService = jobService;
         }
 
-        // POST: create job
         [HttpPost]
-        public async Task<IActionResult> CreateJob(Job job)
+        public async Task<IActionResult> CreateJob(CreateJobDto dto)
         {
-            _context.Jobs.Add(job);
-            await _context.SaveChangesAsync();
-
-            return Ok(job);
+            var result = await _jobService.CreateJobAsync(dto);
+            return Ok(result);
         }
 
-        // GET: list jobs
         [HttpGet]
         public async Task<IActionResult> GetJobs([FromQuery] string? status)
         {
-            var query = _context.Jobs.AsQueryable();
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                query = query.Where(j => j.Status.ToString() == status);
-            }
-
-            var jobs = await query.ToListAsync();
-            return Ok(jobs);
+            var result = await _jobService.GetJobsAsync(status);
+            return Ok(result);
         }
 
-        // GET: single job
         [HttpGet("{id}")]
         public async Task<IActionResult> GetJob(int id)
         {
-            var job = await _context.Jobs.FindAsync(id);
+            var result = await _jobService.GetJobByIdAsync(id);
 
-            if (job == null)
+            if (result == null)
                 return NotFound();
 
-            return Ok(job);
+            return Ok(result);
         }
     }
 }

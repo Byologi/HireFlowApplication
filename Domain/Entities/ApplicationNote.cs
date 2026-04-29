@@ -1,20 +1,14 @@
-using HireFlow.Domain.Enums;
-
-namespace HireFlow.Domain.Entities
+public class ApplicationNote
 {
-    public class ApplicationNote
-    {
-        public Guid Id { get; set; }
+    public int Id { get; set; }
+    
+    public int ApplicationId { get; set; }
 
-        public Guid ApplicationId { get; set; }
-        public Application Application { get; set; } = null!;
+    public Application Application { get; set; }
 
-        public NoteType Type { get; set; }
-        public string Description { get; set; } = null!;
+    public string Type { get; set; }
+    public string Description { get; set; }
 
-        public Guid CreatedById { get; set; }
-        public TeamMember CreatedBy { get; set; } = null!;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    }
+    public int CreatedBy { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

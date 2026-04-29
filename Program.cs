@@ -1,4 +1,6 @@
 using HireFlow.Infrastructure.Data;
+using HireFlow.Services;
+using HireFlow.Services.Jobs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,8 @@ builder.Services.AddSwaggerGen();
 // Add DbContext
 builder.Services.AddDbContext<HireFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IJobService, JobService>();
 
 var app = builder.Build();
 

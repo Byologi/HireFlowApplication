@@ -1,22 +1,18 @@
 using HireFlow.Domain.Enums;
 
-namespace HireFlow.Domain.Entities
+public class StageHistory
 {
-    public class StageHistory
-    {
-        public Guid Id { get; set; }
+    public int Id { get; set; }
+    
+    public int ApplicationId { get; set; }
 
-        public Guid ApplicationId { get; set; }
-        public Application Application { get; set; } = null!;
+    public Application Application { get; set; }
 
-        public ApplicationStage FromStage { get; set; }
-        public ApplicationStage ToStage { get; set; }
+    public ApplicationStage FromStage { get; set; }
+    public ApplicationStage ToStage { get; set; }
 
-        public Guid ChangedById { get; set; }
-        public TeamMember ChangedBy { get; set; } = null!;
+    public int ChangedBy { get; set; }
+    public DateTime ChangedAt { get; set; }
 
-        public DateTime ChangedAt { get; set; } = DateTime.UtcNow;
-
-        public string? Reason { get; set; }
-    }
+    public string? Comment { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,11 +16,12 @@ namespace HireFlow.Migrations
                 name: "Jobs",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Location = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false)
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +32,8 @@ namespace HireFlow.Migrations
                 name: "TeamMembers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false)
@@ -44,15 +47,12 @@ namespace HireFlow.Migrations
                 name: "Applications",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    JobId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    JobId = table.Column<int>(type: "integer", nullable: false),
                     CandidateName = table.Column<string>(type: "text", nullable: false),
                     CandidateEmail = table.Column<string>(type: "text", nullable: false),
-                    CoverLetter = table.Column<string>(type: "text", nullable: true),
-                    CurrentStage = table.Column<int>(type: "integer", nullable: false),
-                    CultureFitScore = table.Column<int>(type: "integer", nullable: true),
-                    InterviewScore = table.Column<int>(type: "integer", nullable: true),
-                    AssessmentScore = table.Column<int>(type: "integer", nullable: true)
+                    CurrentStage = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,71 +66,56 @@ namespace HireFlow.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApplicationNotes",
+                name: "ApplicationNote",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ApplicationId = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApplicationNotes", x => x.Id);
+                    table.PrimaryKey("PK_ApplicationNote", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ApplicationNotes_Applications_ApplicationId",
+                        name: "FK_ApplicationNote_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApplicationNotes_TeamMembers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "TeamMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StageHistories",
+                name: "StageHistory",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ApplicationId = table.Column<int>(type: "integer", nullable: false),
                     FromStage = table.Column<int>(type: "integer", nullable: false),
                     ToStage = table.Column<int>(type: "integer", nullable: false),
-                    ChangedById = table.Column<Guid>(type: "uuid", nullable: false),
+                    ChangedBy = table.Column<int>(type: "integer", nullable: false),
                     ChangedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Reason = table.Column<string>(type: "text", nullable: true)
+                    Comment = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StageHistories", x => x.Id);
+                    table.PrimaryKey("PK_StageHistory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StageHistories_Applications_ApplicationId",
+                        name: "FK_StageHistory_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StageHistories_TeamMembers_ChangedById",
-                        column: x => x.ChangedById,
-                        principalTable: "TeamMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicationNotes_ApplicationId",
-                table: "ApplicationNotes",
+                name: "IX_ApplicationNote_ApplicationId",
+                table: "ApplicationNote",
                 column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicationNotes_CreatedById",
-                table: "ApplicationNotes",
-                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_JobId_CandidateEmail",
@@ -139,30 +124,25 @@ namespace HireFlow.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_StageHistories_ApplicationId",
-                table: "StageHistories",
+                name: "IX_StageHistory_ApplicationId",
+                table: "StageHistory",
                 column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StageHistories_ChangedById",
-                table: "StageHistories",
-                column: "ChangedById");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApplicationNotes");
+                name: "ApplicationNote");
 
             migrationBuilder.DropTable(
-                name: "StageHistories");
-
-            migrationBuilder.DropTable(
-                name: "Applications");
+                name: "StageHistory");
 
             migrationBuilder.DropTable(
                 name: "TeamMembers");
+
+            migrationBuilder.DropTable(
+                name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "Jobs");

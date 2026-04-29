@@ -1,23 +1,18 @@
+using HireFlow.Domain.Entities;
 using HireFlow.Domain.Enums;
 
-namespace HireFlow.Domain.Entities
+public class Application
 {
-    public class Application
-    {
-        public Guid Id { get; set; }
+    public int Id { get; set; }
 
-        public Guid JobId { get; set; }
-        public Job Job { get; set; } = null!;
+    public int JobId { get; set; }
+    public Job Job { get; set; }
 
-        public string CandidateName { get; set; } = null!;
-        public string CandidateEmail { get; set; } = null!;
-        public string? CoverLetter { get; set; }
+    public string CandidateName { get; set; }
+    public string CandidateEmail { get; set; }
 
-        public ApplicationStage CurrentStage { get; set; } = ApplicationStage.Applied;
+    public ApplicationStage CurrentStage { get; set; }
 
-        // Scores (nullable until set)
-        public int? CultureFitScore { get; set; }
-        public int? InterviewScore { get; set; }
-        public int? AssessmentScore { get; set; }
-    }
+    public ICollection<ApplicationNote> Notes { get; set; } = new List<ApplicationNote>();
+    public ICollection<StageHistory> StageHistories { get; set; } = new List<StageHistory>();
 }

@@ -18,8 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Applications\DTOs\" />
-      <Folder Include="Applications\Services\" />
+      <Folder Include="Applications\Services\Application\" />
     </ItemGroup>
 
 </Project>

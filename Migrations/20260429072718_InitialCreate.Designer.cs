@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HireFlow.Migrations
 {
     [DbContext(typeof(HireFlowDbContext))]
-    [Migration("20260429011328_InitialCreate")]
+    [Migration("20260429072718_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,14 +25,13 @@ namespace HireFlow.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.Application", b =>
+            modelBuilder.Entity("Application", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("AssessmentScore")
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CandidateEmail")
                         .IsRequired()
@@ -42,20 +41,11 @@ namespace HireFlow.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("CoverLetter")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("CultureFitScore")
-                        .HasColumnType("integer");
-
                     b.Property<int>("CurrentStage")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("InterviewScore")
+                    b.Property<int>("JobId")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("JobId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -65,102 +55,45 @@ namespace HireFlow.Migrations
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.ApplicationNote", b =>
+            modelBuilder.Entity("ApplicationNote", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationId");
 
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("ApplicationNotes");
-                });
-
-            modelBuilder.Entity("HireFlow.Domain.Entities.Job", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Jobs");
-                });
-
-            modelBuilder.Entity("HireFlow.Domain.Entities.StageHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ChangedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("ChangedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("FromStage")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("text");
-
-                    b.Property<int>("ToStage")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationId");
-
-                    b.HasIndex("ChangedById");
-
-                    b.ToTable("StageHistories");
+                    b.ToTable("ApplicationNote");
                 });
 
             modelBuilder.Entity("HireFlow.Domain.Entities.TeamMember", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -178,9 +111,70 @@ namespace HireFlow.Migrations
                     b.ToTable("TeamMembers");
                 });
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.Application", b =>
+            modelBuilder.Entity("Job", b =>
                 {
-                    b.HasOne("HireFlow.Domain.Entities.Job", "Job")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("StageHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ChangedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<int>("FromStage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ToStage")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("StageHistory");
+                });
+
+            modelBuilder.Entity("Application", b =>
+                {
+                    b.HasOne("Job", "Job")
                         .WithMany("Applications")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -189,45 +183,36 @@ namespace HireFlow.Migrations
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.ApplicationNote", b =>
+            modelBuilder.Entity("ApplicationNote", b =>
                 {
-                    b.HasOne("HireFlow.Domain.Entities.Application", "Application")
-                        .WithMany()
+                    b.HasOne("Application", "Application")
+                        .WithMany("Notes")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HireFlow.Domain.Entities.TeamMember", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Application");
-
-                    b.Navigation("CreatedBy");
                 });
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.StageHistory", b =>
+            modelBuilder.Entity("StageHistory", b =>
                 {
-                    b.HasOne("HireFlow.Domain.Entities.Application", "Application")
-                        .WithMany()
+                    b.HasOne("Application", "Application")
+                        .WithMany("StageHistories")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HireFlow.Domain.Entities.TeamMember", "ChangedBy")
-                        .WithMany()
-                        .HasForeignKey("ChangedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Application");
-
-                    b.Navigation("ChangedBy");
                 });
 
-            modelBuilder.Entity("HireFlow.Domain.Entities.Job", b =>
+            modelBuilder.Entity("Application", b =>
+                {
+                    b.Navigation("Notes");
+
+                    b.Navigation("StageHistories");
+                });
+
+            modelBuilder.Entity("Job", b =>
                 {
                     b.Navigation("Applications");
                 });
