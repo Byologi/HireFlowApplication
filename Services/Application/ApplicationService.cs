@@ -9,23 +9,15 @@ namespace HireFlow.Services.Applications
     public class ApplicationService : IApplicationService
     {
         private readonly HireFlowDbContext _context;
-        
-        private bool IsValidTransition(ApplicationStage from, ApplicationStage to)
-        {
-            return (from, to) switch
-            {
-                (ApplicationStage.Applied, ApplicationStage.Screening) => true,
-                (ApplicationStage.Screening, ApplicationStage.Rejected) => true,
-                _ => false
-            };
-        }
 
         public ApplicationService(HireFlowDbContext context)
         {
             _context = context;
         }
 
-        // 🔥 1. APPLY TO JOB
+        // =========================
+        // APPLY TO JOB
+        // =========================
         public async Task<ApplicationResponseDto> ApplyAsync(int jobId, CreateApplicationDto dto)
         {
             var jobExists = await _context.Jobs.AnyAsync(j => j.Id == jobId);
@@ -33,11 +25,10 @@ namespace HireFlow.Services.Applications
             if (!jobExists)
                 throw new Exception("Job not found");
 
-            // duplicate check
-            var exists = await _context.Applications
+            var duplicate = await _context.Applications
                 .AnyAsync(a => a.JobId == jobId && a.CandidateEmail == dto.CandidateEmail);
 
-            if (exists)
+            if (duplicate)
                 throw new Exception("You already applied for this job");
 
             var application = new Application
@@ -54,8 +45,9 @@ namespace HireFlow.Services.Applications
             return Map(application);
         }
 
-       
-
+        // =========================
+        // GET BY JOB
+        // =========================
         public async Task<List<ApplicationResponseDto>> GetByJobAsync(int jobId, string? stage)
         {
             var query = _context.Applications
@@ -64,9 +56,9 @@ namespace HireFlow.Services.Applications
 
             if (!string.IsNullOrEmpty(stage))
             {
-                if (Enum.TryParse<ApplicationStage>(stage, true, out var parsedStage))
+                if (Enum.TryParse<ApplicationStage>(stage, true, out var parsed))
                 {
-                    query = query.Where(a => a.CurrentStage == parsedStage);
+                    query = query.Where(a => a.CurrentStage == parsed);
                 }
                 else
                 {
@@ -81,7 +73,9 @@ namespace HireFlow.Services.Applications
             return applications.Select(Map).ToList();
         }
 
-        // 🔥 3. GET SINGLE APPLICATION
+        // =========================
+        // GET FULL PROFILE
+        // =========================
         public async Task<ApplicationDetailDto?> GetByIdAsync(int id)
         {
             var application = await _context.Applications
@@ -104,7 +98,7 @@ namespace HireFlow.Services.Applications
                 {
                     Type = n.Type.ToString(),
                     Description = n.Description,
-                    CreatedByName = $"User {n.CreatedBy}", // temporary (we fix later with TeamMember join)
+                    CreatedByName = $"User {n.CreatedBy}",
                     CreatedAt = n.CreatedAt
                 }).ToList(),
 
@@ -112,35 +106,38 @@ namespace HireFlow.Services.Applications
                 {
                     FromStage = s.FromStage.ToString(),
                     ToStage = s.ToStage.ToString(),
-                    ChangedByName = $"User {s.ChangedBy}", // temporary placeholder
+                    ChangedByName = $"User {s.ChangedBy}",
                     ChangedAt = s.ChangedAt,
                     Comment = s.Comment
                 }).ToList()
             };
         }
 
-        public async Task<ApplicationResponseDto> UpdateStageAsync(int applicationId, UpdateStageDto dto, int teamMemberId)
+        // =========================
+        // UPDATE STAGE
+        // =========================
+        public async Task<ApplicationResponseDto> UpdateStageAsync(
+            int applicationId,
+            UpdateStageDto dto,
+            int teamMemberId)
         {
             var application = await _context.Applications.FindAsync(applicationId);
 
             if (application == null)
                 throw new Exception("Application not found");
 
-            // Parse new stage
             if (!Enum.TryParse<ApplicationStage>(dto.Stage, true, out var newStage))
                 throw new Exception("Invalid stage");
 
-            var currentStage = application.CurrentStage;
+            var current = application.CurrentStage;
 
-            // 🔥 VALIDATE TRANSITION
-            if (!IsValidTransition(currentStage, newStage))
-                throw new Exception($"Invalid transition from {currentStage} to {newStage}");
+            if (!IsValidTransition(current, newStage))
+                throw new Exception($"Invalid transition {current} → {newStage}");
 
-            // 🔥 SAVE HISTORY
             var history = new StageHistory
             {
                 ApplicationId = application.Id,
-                FromStage = currentStage,
+                FromStage = current,
                 ToStage = newStage,
                 ChangedBy = teamMemberId,
                 ChangedAt = DateTime.UtcNow,
@@ -149,22 +146,118 @@ namespace HireFlow.Services.Applications
 
             _context.StageHistories.Add(history);
 
-            // 🔥 UPDATE APPLICATION
             application.CurrentStage = newStage;
 
             await _context.SaveChangesAsync();
 
-            return new ApplicationResponseDto
+            return Map(application);
+        }
+
+        // =========================
+        // ADD NOTE
+        // =========================
+        public async Task<NoteResponseDto> AddNoteAsync(
+            int applicationId,
+            CreateNoteDto dto,
+            int teamMemberId)
+        {
+            var application = await _context.Applications.FindAsync(applicationId);
+
+            if (application == null)
+                throw new Exception("Application not found");
+
+            if (!Enum.TryParse<NoteType>(dto.Type, true, out var type))
+                throw new Exception("Invalid note type");
+
+            var note = new ApplicationNote
             {
-                Id = application.Id,
-                JobId = application.JobId,
-                CandidateName = application.CandidateName,
-                CandidateEmail = application.CandidateEmail,
-                Stage = application.CurrentStage.ToString()
+                ApplicationId = applicationId,
+                Type = type,
+                Description = dto.Description,
+                CreatedBy = teamMemberId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ApplicationNotes.Add(note);
+
+            await _context.SaveChangesAsync();
+
+            var member = await _context.TeamMembers.FindAsync(teamMemberId);
+
+            return new NoteResponseDto
+            {
+                Type = note.Type.ToString(),
+                Description = note.Description,
+                CreatedByName = member?.Name ?? "Unknown",
+                CreatedAt = note.CreatedAt
             };
         }
 
-        // 🔧 MAPPER
+        // =========================
+        // GET NOTES
+        // =========================
+        public async Task<List<NoteResponseDto>> GetNotesAsync(int applicationId)
+        {
+            var notes = await _context.ApplicationNotes
+                .Where(n => n.ApplicationId == applicationId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            var result = new List<NoteResponseDto>();
+
+            foreach (var n in notes)
+            {
+                var member = await _context.TeamMembers.FindAsync(n.CreatedBy);
+
+                result.Add(new NoteResponseDto
+                {
+                    Type = n.Type.ToString(),
+                    Description = n.Description,
+                    CreatedByName = member?.Name ?? "Unknown",
+                    CreatedAt = n.CreatedAt
+                });
+            }
+
+            return result;
+        }
+
+        // =========================
+        // SCORE LOGIC (READY FOR NEXT STEP)
+        // =========================
+        private async Task UpsertScore(
+            int applicationId,
+            string type,
+            ScoreUpdateDto dto,
+            int teamMemberId)
+        {
+            if (dto.Score < 1 || dto.Score > 5)
+                throw new Exception("Score must be between 1 and 5");
+
+            var existing = await _context.ApplicationScores
+                .FirstOrDefaultAsync(s => s.ApplicationId == applicationId && s.Type == type);
+
+            if (existing == null)
+            {
+                existing = new ApplicationScore
+                {
+                    ApplicationId = applicationId,
+                    Type = type
+                };
+
+                _context.ApplicationScores.Add(existing);
+            }
+
+            existing.Score = dto.Score;
+            existing.Comment = dto.Comment;
+            existing.UpdatedBy = teamMemberId;
+            existing.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+        }
+
+        // =========================
+        // MAPPER
+        // =========================
         private static ApplicationResponseDto Map(Application application)
         {
             return new ApplicationResponseDto
@@ -174,6 +267,34 @@ namespace HireFlow.Services.Applications
                 CandidateName = application.CandidateName,
                 CandidateEmail = application.CandidateEmail,
                 Stage = application.CurrentStage.ToString()
+            };
+        }
+        
+        public async Task UpdateCultureFitScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId)
+        {
+            await UpsertScore(applicationId, "culture-fit", dto, teamMemberId);
+        }
+
+        public async Task UpdateInterviewScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId)
+        {
+            await UpsertScore(applicationId, "interview", dto, teamMemberId);
+        }
+
+        public async Task UpdateAssessmentScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId)
+        {
+            await UpsertScore(applicationId, "assessment", dto, teamMemberId);
+        }
+
+        // =========================
+        // VALIDATION
+        // =========================
+        private bool IsValidTransition(ApplicationStage from, ApplicationStage to)
+        {
+            return (from, to) switch
+            {
+                (ApplicationStage.Applied, ApplicationStage.Screening) => true,
+                (ApplicationStage.Screening, ApplicationStage.Rejected) => true,
+                _ => false
             };
         }
     }

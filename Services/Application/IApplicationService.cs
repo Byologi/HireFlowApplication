@@ -11,5 +11,17 @@ namespace HireFlow.Services.Applications
         Task<ApplicationDetailDto?> GetByIdAsync(int id);
         
         Task<ApplicationResponseDto> UpdateStageAsync(int applicationId, UpdateStageDto dto, int teamMemberId);
+        
+        Task<NoteResponseDto> AddNoteAsync(int applicationId, CreateNoteDto dto, int teamMemberId);
+
+        Task<List<NoteResponseDto>> GetNotesAsync(int applicationId);
+        
+        Task UpdateCultureFitScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId);
+
+        Task UpdateInterviewScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId);
+
+        Task UpdateAssessmentScoreAsync(int applicationId, ScoreUpdateDto dto, int teamMemberId);
+        
+
     }
 }

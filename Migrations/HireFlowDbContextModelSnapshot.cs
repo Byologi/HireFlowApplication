@@ -73,15 +73,54 @@ namespace HireFlow.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("ApplicationNote");
+                    b.ToTable("ApplicationNotes");
+                });
+
+            modelBuilder.Entity("ApplicationScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ApplicationScoreId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("ApplicationScoreId");
+
+                    b.ToTable("ApplicationScores");
                 });
 
             modelBuilder.Entity("HireFlow.Domain.Entities.TeamMember", b =>
@@ -166,7 +205,7 @@ namespace HireFlow.Migrations
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("StageHistory");
+                    b.ToTable("StageHistories");
                 });
 
             modelBuilder.Entity("Application", b =>
@@ -191,6 +230,21 @@ namespace HireFlow.Migrations
                     b.Navigation("Application");
                 });
 
+            modelBuilder.Entity("ApplicationScore", b =>
+                {
+                    b.HasOne("Application", "Application")
+                        .WithMany("Scores")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApplicationScore", null)
+                        .WithMany("Scores")
+                        .HasForeignKey("ApplicationScoreId");
+
+                    b.Navigation("Application");
+                });
+
             modelBuilder.Entity("StageHistory", b =>
                 {
                     b.HasOne("Application", "Application")
@@ -206,7 +260,14 @@ namespace HireFlow.Migrations
                 {
                     b.Navigation("Notes");
 
+                    b.Navigation("Scores");
+
                     b.Navigation("StageHistories");
+                });
+
+            modelBuilder.Entity("ApplicationScore", b =>
+                {
+                    b.Navigation("Scores");
                 });
 
             modelBuilder.Entity("Job", b =>

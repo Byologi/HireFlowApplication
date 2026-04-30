@@ -15,4 +15,6 @@ public class Application
 
     public ICollection<ApplicationNote> Notes { get; set; } = new List<ApplicationNote>();
     public ICollection<StageHistory> StageHistories { get; set; } = new List<StageHistory>();
+    
+    public ICollection<ApplicationScore> Scores { get; set; } = new List<ApplicationScore>();
 }
