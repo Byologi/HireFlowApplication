@@ -5,13 +5,36 @@ using Microsoft.AspNetCore.Mvc;
 namespace HireFlow.Controllers
 {
     [ApiController]
-    [Route("")]
+    [Route("api/applications")]
     public class ApplicationsController : ControllerBase
     {
         private readonly IApplicationService _applicationService;
-        
+
+        public ApplicationsController(IApplicationService applicationService)
+        {
+            _applicationService = applicationService;
+        }
+
+        // ✅ APPLY (correct route)
+        [HttpPost("/api/jobs/{jobId}/applications")]
+        public async Task<IActionResult> ApplyToJob(int jobId, CreateApplicationDto dto)
+        {
+            var result = await _applicationService.ApplyAsync(jobId, dto);
+            return Ok(result);
+        }
+
+        // ✅ LIST APPLICATIONS FOR JOB
+        [HttpGet("/api/jobs/{jobId}/applications")]
+        public async Task<IActionResult> GetApplicationsForJob(
+            int jobId,
+            [FromQuery] string? stage)
+        {
+            var result = await _applicationService.GetByJobAsync(jobId, stage);
+            return Ok(result);
+        }
+
         // ✅ GET SINGLE APPLICATION
-        [HttpGet("api/applications/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _applicationService.GetByIdAsync(id);
@@ -23,7 +46,7 @@ namespace HireFlow.Controllers
         }
 
         // ✅ UPDATE STAGE
-        [HttpPatch("api/applications/{id}/stage")]
+        [HttpPatch("{id}/stage")]
         public async Task<IActionResult> UpdateStage(int id, UpdateStageDto dto)
         {
             if (!Request.Headers.TryGetValue("X-Team-Member-Id", out var headerValue))
@@ -37,7 +60,7 @@ namespace HireFlow.Controllers
             return Ok(result);
         }
         
-        [HttpPost("api/applications/{id}/notes")]
+        [HttpPost("{id}/notes")]
         public async Task<IActionResult> AddNote(int id, CreateNoteDto dto)
         {
             if (!Request.Headers.TryGetValue("X-Team-Member-Id", out var header))
@@ -50,7 +73,7 @@ namespace HireFlow.Controllers
             return Ok(result);
         }
         
-        [HttpGet("api/applications/{id}/notes")]
+        [HttpGet("{id}/notes")]
         public async Task<IActionResult> GetNotes(int id)
         {
             var result = await _applicationService.GetNotesAsync(id);

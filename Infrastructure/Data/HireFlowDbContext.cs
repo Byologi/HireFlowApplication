@@ -16,6 +16,8 @@ namespace HireFlow.Infrastructure.Data
         public DbSet<ApplicationNote> ApplicationNotes { get; set; }
         public DbSet<StageHistory> StageHistories { get; set; }
         public DbSet<ApplicationScore> ApplicationScores { get; set; }
+        
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

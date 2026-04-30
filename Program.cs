@@ -1,6 +1,7 @@
 using HireFlow.Infrastructure.Data;
 using HireFlow.Services;
 using HireFlow.Services.Applications;
+using HireFlow.Services.BackgroundQueue;
 using HireFlow.Services.Jobs;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+builder.Services.AddHostedService<QueuedHostedService>();
 
 // Add DbContext
 builder.Services.AddDbContext<HireFlowDbContext>(options =>

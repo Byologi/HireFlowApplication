@@ -1,6 +1,5 @@
 using HireFlow.DTOs;
 using HireFlow.Services;
-using HireFlow.Services.Applications;
 using HireFlow.Services.Jobs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +10,10 @@ namespace HireFlow.Controllers
     public class JobsController : ControllerBase
     {
         private readonly IJobService _jobService;
-        private readonly IApplicationService _applicationService;
 
         public JobsController(IJobService jobService)
         {
             _jobService = jobService;
-            IApplicationService? applicationService;
         }
 
         [HttpPost]
@@ -41,24 +38,6 @@ namespace HireFlow.Controllers
             if (result == null)
                 return NotFound();
 
-            return Ok(result);
-        }
-        
-        // ✅ APPLY (correct route)
-        [HttpPost("{jobId}/applications")]
-        public async Task<IActionResult> ApplyToJob(int jobId, CreateApplicationDto dto)
-        {
-            var result = await _applicationService.ApplyAsync(jobId, dto);
-            return Ok(result);
-        }
-
-        // ✅ LIST APPLICATIONS FOR JOB
-        [HttpGet("{jobId}/applications")]
-        public async Task<IActionResult> GetApplicationsForJob(
-            int jobId,
-            [FromQuery] string? stage)
-        {
-            var result = await _applicationService.GetByJobAsync(jobId, stage);
             return Ok(result);
         }
     }

@@ -2,6 +2,7 @@ using HireFlow.Domain.Entities;
 using HireFlow.Domain.Enums;
 using HireFlow.DTOs;
 using HireFlow.Infrastructure.Data;
+using HireFlow.Services.BackgroundQueue;
 using Microsoft.EntityFrameworkCore;
 
 namespace HireFlow.Services.Applications
@@ -9,10 +10,12 @@ namespace HireFlow.Services.Applications
     public class ApplicationService : IApplicationService
     {
         private readonly HireFlowDbContext _context;
+        private readonly IBackgroundTaskQueue _queue;
 
-        public ApplicationService(HireFlowDbContext context)
+        public ApplicationService(HireFlowDbContext context, IBackgroundTaskQueue queue)
         {
             _context = context;
+            _queue = queue;
         }
 
         // =========================
@@ -149,6 +152,30 @@ namespace HireFlow.Services.Applications
             application.CurrentStage = newStage;
 
             await _context.SaveChangesAsync();
+
+            // 🔥 BACKGROUND NOTIFICATION TRIGGER
+            if (newStage == ApplicationStage.Hired || newStage == ApplicationStage.Rejected)
+            {
+                var appId = application.Id;
+                var email = application.CandidateEmail;
+                var stage = newStage.ToString();
+
+                _queue.QueueTask(async sp =>
+                {
+                    var db = sp.GetRequiredService<HireFlowDbContext>();
+
+                    Console.WriteLine($"[NOTIFICATION EMAIL] Sent to {email} - Status: {stage}");
+
+                    db.Notifications.Add(new Notification
+                    {
+                        ApplicationId = appId,
+                        Type = stage,
+                        SentAt = DateTime.UtcNow
+                    });
+
+                    await db.SaveChangesAsync();
+                });
+            }
 
             return Map(application);
         }
@@ -293,9 +320,13 @@ namespace HireFlow.Services.Applications
             return (from, to) switch
             {
                 (ApplicationStage.Applied, ApplicationStage.Screening) => true,
+                (ApplicationStage.Screening, ApplicationStage.Interview) => true,
+                (ApplicationStage.Interview, ApplicationStage.Hired) => true,
+                (ApplicationStage.Interview, ApplicationStage.Rejected) => true,
                 (ApplicationStage.Screening, ApplicationStage.Rejected) => true,
                 _ => false
             };
         }
+        
     }
 }
