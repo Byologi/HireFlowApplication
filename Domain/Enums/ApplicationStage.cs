@@ -5,7 +5,7 @@ namespace HireFlow.Domain.Enums
         Applied = 0,
         Screening = 1,
         Rejected = 2,
-        Hired,
+        Hired ,
         Interview
     }
 }
