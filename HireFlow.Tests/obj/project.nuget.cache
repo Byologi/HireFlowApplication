@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EA6GQoQrb/E=",
+  "dgSpecHash": "JWNyduLOxxg=",
   "success": true,
-  "projectFilePath": "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/HireFlow.Tests.csproj",
+  "projectFilePath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/HireFlow.Tests.csproj",
   "expectedPackageFiles": [
     "/home/hp/.nuget/packages/coverlet.collector/6.0.0/coverlet.collector.6.0.0.nupkg.sha512",
     "/home/hp/.nuget/packages/fluentassertions/8.9.0/fluentassertions.8.9.0.nupkg.sha512",

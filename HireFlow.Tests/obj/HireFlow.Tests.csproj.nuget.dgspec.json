@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/HireFlow.Tests.csproj": {}
+    "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/HireFlow.Tests.csproj": {}
   },
   "projects": {
-    "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/HireFlow.Tests.csproj": {
+    "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/HireFlow.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/HireFlow.Tests.csproj",
+        "projectUniqueName": "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/HireFlow.Tests.csproj",
         "projectName": "HireFlow.Tests",
-        "projectPath": "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/HireFlow.Tests.csproj",
+        "projectPath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/HireFlow.Tests.csproj",
         "packagesPath": "/home/hp/.nuget/packages/",
-        "outputPath": "/home/hp/RiderProjects/WebApplication1/HireFlow.Tests/obj/",
+        "outputPath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/hp/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/hp/RiderProjects/WebApplication1/HireFlow/HireFlow.csproj": {
-                "projectPath": "/home/hp/RiderProjects/WebApplication1/HireFlow/HireFlow.csproj"
+              "/home/hp/RiderProjects/HireFlowApplication/HireFlow/HireFlow.csproj": {
+                "projectPath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow/HireFlow.csproj"
               }
             }
           }
@@ -96,14 +96,14 @@
         }
       }
     },
-    "/home/hp/RiderProjects/WebApplication1/HireFlow/HireFlow.csproj": {
+    "/home/hp/RiderProjects/HireFlowApplication/HireFlow/HireFlow.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/hp/RiderProjects/WebApplication1/HireFlow/HireFlow.csproj",
+        "projectUniqueName": "/home/hp/RiderProjects/HireFlowApplication/HireFlow/HireFlow.csproj",
         "projectName": "HireFlow",
-        "projectPath": "/home/hp/RiderProjects/WebApplication1/HireFlow/HireFlow.csproj",
+        "projectPath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow/HireFlow.csproj",
         "packagesPath": "/home/hp/.nuget/packages/",
-        "outputPath": "/home/hp/RiderProjects/WebApplication1/HireFlow/obj/",
+        "outputPath": "/home/hp/RiderProjects/HireFlowApplication/HireFlow/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/hp/.nuget/NuGet/NuGet.Config"
