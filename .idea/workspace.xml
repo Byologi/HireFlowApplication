@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6873d802-0107-41e5-9102-d65e686cc7c7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireFlow.Tests/obj/HireFlow.Tests.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/HireFlow.Tests/obj/HireFlow.Tests.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireFlow.Tests/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/HireFlow.Tests/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireFlow.Tests/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/HireFlow.Tests/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +16,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Byologi/HireFlowApplication.git",
+    "accountId": "41ff791d-11a0-445a-bedc-53a0c84f7399"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/HireFlow/Controllers/ApplicationController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireFlow/Program.cs" root0="FORCE_HIGHLIGHTING" />
@@ -81,6 +82,10 @@
       <updated>1777619839749</updated>
       <workItem from="1777619843697" duration="1435000" />
       <workItem from="1777623792951" duration="4684000" />
+      <workItem from="1777628588715" duration="274000" />
+      <workItem from="1777628914603" duration="141000" />
+      <workItem from="1777629113006" duration="25000" />
+      <workItem from="1777629200390" duration="337000" />
     </task>
     <servers />
   </component>
