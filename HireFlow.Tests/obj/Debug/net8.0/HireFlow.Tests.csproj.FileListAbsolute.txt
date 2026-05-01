@@ -1,0 +1,3 @@
+/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.dll
+/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/obj/Debug/net8.0/refint/HireFlow.Tests.dll
+/home/hp/RiderProjects/HireFlowApplication/HireFlow.Tests/obj/Debug/net8.0/HireFlow.Tests.pdb

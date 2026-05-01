@@ -1,0 +1,32 @@
+﻿
+
+services:
+  db:
+    image: postgres:16
+    container_name: hireflow-db
+    restart: always
+    environment:
+      POSTGRES_USER: hireflow
+      POSTGRES_PASSWORD: hireflow
+      POSTGRES_DB: hireflow_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: HireFlow/Dockerfile
+    container_name: hireflow-api
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=hireflow_db;Username=hireflow;Password=hireflow
+
+volumes:
+  pgdata:
