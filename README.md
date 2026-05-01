@@ -2,7 +2,7 @@
 
 ## Overview
 
-HireFlow is a simplified Applicant Tracking System (ATS) built as part of the Aihrly Junior Backend Developer take-home assessment.
+HireFlow is a simplified Applicant Tracking System (ATS) 
 
 This API allows recruiters and hiring managers to:
 
@@ -82,8 +82,21 @@ http://localhost:5274/swagger
 ```
 
 ---
+### Running with Docker
 
-## 👥 Seeded Team Members
+```bash
+docker compose up --build
+```
+
+API will be available at:
+
+```
+http://localhost:8080/swagger
+```
+
+---
+
+## Seeded Team Members
 
 (Used via `X-Team-Member-Id` header)
 
@@ -166,12 +179,32 @@ Used for:
 
 ---
 
+### Background Processing
+When an application moves to either Hired or Rejected, a background job is triggered.
+
+This job:
+* Logs a notification event
+* Inserts a record into the Notifications table
+*  Runs asynchronously to avoid blocking the API response
+
+This ensures that the ```PATCH /stage``` endpoint returns immediately while side effects are handled in the background.
+
+---
+
 ## Testing
 
-You can test the API using:
+The project includes unit tests covering:
 
-* Swagger UI
-* Postman
+* Application creation
+* Duplicate application validation
+* Job existence validation
+* Stage transitions
+* Notes functionality
+
+Run tests using:
+```
+dotnet test
+```
 
 Example flow:
 
@@ -182,6 +215,14 @@ Example flow:
 5. Add scores
 6. Fetch full profile
 
+---
+
+### Limitations and Future Improvements
+* No real authentication (JWT or OAuth)
+* No pagination for large datasets
+* No caching layer implemented
+* Limited validation and error standardization
+* No CI/CD pipeline included
 ---
 
 
