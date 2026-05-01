@@ -153,7 +153,7 @@ namespace HireFlow.Services.Applications
 
             await _context.SaveChangesAsync();
 
-            // 🔥 BACKGROUND NOTIFICATION TRIGGER
+            // BACKGROUND NOTIFICATION TRIGGER
             if (newStage == ApplicationStage.Hired || newStage == ApplicationStage.Rejected)
             {
                 var appId = application.Id;

@@ -37,7 +37,10 @@ namespace HireFlow.Services.Jobs
 
             if (!string.IsNullOrEmpty(status))
             {
-                query = query.Where(j => j.Status.ToString() == status);
+                if (Enum.TryParse<JobStatus>(status, true, out var parsedStatus))
+                {
+                    query = query.Where(j => j.Status == parsedStatus);
+                }
             }
 
             var jobs = await query.ToListAsync();

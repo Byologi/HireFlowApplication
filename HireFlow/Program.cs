@@ -24,6 +24,13 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 var app = builder.Build();
 
+// Automatic Migration
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<HireFlowDbContext>();
+    db.Database.Migrate();
+}
+
 // Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
