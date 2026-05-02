@@ -1,4 +1,3 @@
---- 
 ## SCHEMA DESIGN
 
 ### APPLICATION

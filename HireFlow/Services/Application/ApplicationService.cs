@@ -18,9 +18,8 @@ namespace HireFlow.Services.Applications
             _queue = queue;
         }
 
-        // =========================
+       
         // APPLY TO JOB
-        // =========================
         public async Task<ApplicationResponseDto> ApplyAsync(int jobId, CreateApplicationDto dto)
         {
             var jobExists = await _context.Jobs.AnyAsync(j => j.Id == jobId);
@@ -47,10 +46,8 @@ namespace HireFlow.Services.Applications
 
             return Map(application);
         }
-
-        // =========================
+        
         // GET BY JOB
-        // =========================
         public async Task<List<ApplicationResponseDto>> GetByJobAsync(int jobId, string? stage)
         {
             var query = _context.Applications
@@ -75,10 +72,8 @@ namespace HireFlow.Services.Applications
 
             return applications.Select(Map).ToList();
         }
-
-        // =========================
+        
         // GET FULL PROFILE
-        // =========================
         public async Task<ApplicationDetailDto?> GetByIdAsync(int id)
         {
             var application = await _context.Applications
@@ -115,10 +110,8 @@ namespace HireFlow.Services.Applications
                 }).ToList()
             };
         }
-
-        // =========================
+        
         // UPDATE STAGE
-        // =========================
         public async Task<ApplicationResponseDto> UpdateStageAsync(
             int applicationId,
             UpdateStageDto dto,
@@ -179,10 +172,8 @@ namespace HireFlow.Services.Applications
 
             return Map(application);
         }
-
-        // =========================
+        
         // ADD NOTE
-        // =========================
         public async Task<NoteResponseDto> AddNoteAsync(
             int applicationId,
             CreateNoteDto dto,
@@ -219,10 +210,8 @@ namespace HireFlow.Services.Applications
                 CreatedAt = note.CreatedAt
             };
         }
-
-        // =========================
+        
         // GET NOTES
-        // =========================
         public async Task<List<NoteResponseDto>> GetNotesAsync(int applicationId)
         {
             var notes = await _context.ApplicationNotes
@@ -247,10 +236,8 @@ namespace HireFlow.Services.Applications
 
             return result;
         }
-
-        // =========================
+        
         // SCORE LOGIC (READY FOR NEXT STEP)
-        // =========================
         private async Task UpsertScore(
             int applicationId,
             string type,
@@ -281,10 +268,8 @@ namespace HireFlow.Services.Applications
 
             await _context.SaveChangesAsync();
         }
-
-        // =========================
+        
         // MAPPER
-        // =========================
         private static ApplicationResponseDto Map(Application application)
         {
             return new ApplicationResponseDto
@@ -311,10 +296,8 @@ namespace HireFlow.Services.Applications
         {
             await UpsertScore(applicationId, "assessment", dto, teamMemberId);
         }
-
-        // =========================
+        
         // VALIDATION
-        // =========================
         private bool IsValidTransition(ApplicationStage from, ApplicationStage to)
         {
             return (from, to) switch

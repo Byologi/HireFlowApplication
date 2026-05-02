@@ -14,16 +14,14 @@ namespace HireFlow.Controllers
         {
             _applicationService = applicationService;
         }
-
-        // ✅ APPLY (correct route)
+        
         [HttpPost("/api/jobs/{jobId}/applications")]
         public async Task<IActionResult> ApplyToJob(int jobId, CreateApplicationDto dto)
         {
             var result = await _applicationService.ApplyAsync(jobId, dto);
             return Ok(result);
         }
-
-        // ✅ LIST APPLICATIONS FOR JOB
+        
         [HttpGet("/api/jobs/{jobId}/applications")]
         public async Task<IActionResult> GetApplicationsForJob(
             int jobId,
@@ -32,8 +30,8 @@ namespace HireFlow.Controllers
             var result = await _applicationService.GetByJobAsync(jobId, stage);
             return Ok(result);
         }
-
-        // ✅ GET SINGLE APPLICATION
+        
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -44,8 +42,8 @@ namespace HireFlow.Controllers
 
             return Ok(result);
         }
-
-        // ✅ UPDATE STAGE
+        
+        
         [HttpPatch("{id}/stage")]
         public async Task<IActionResult> UpdateStage(int id, UpdateStageDto dto)
         {
